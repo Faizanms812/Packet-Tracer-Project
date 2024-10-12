@@ -39,6 +39,7 @@ HSRP stands for hot standby routing protocol and allows for a virtual default ga
 ![image](https://github.com/user-attachments/assets/e0f94d88-d08b-4398-9b9b-cae1aae5eedf)
 
 Configuring HSRP for Building A
+------------------------------------
 ![image](https://github.com/user-attachments/assets/afa7fe7f-51e7-4fc3-9d2c-990d54887f03)
 
 
@@ -49,6 +50,25 @@ I configured OSPF (Open shorted path first), a dynamic routing protocol that is 
 
 Current routing table (Note Building C is sill not configured)
 ![image](https://github.com/user-attachments/assets/fb16bdf7-180e-4b48-b4eb-1486943d8a87)
+
+Configuring NTP services
+--------------------------------------------
+NTP is essential to have on a network to allow devices to accurately synch there clocks. This is very important for logging and troubleshooting information. NTP stands for network time protocol and uses UDP port 123. 
+![image](https://github.com/user-attachments/assets/22bc759c-6434-49af-8a82-af0157b5497a)
+
+Configuring Syslog services
+------------------------------------------
+Successfully configured a dedicate syslog server to allow networking devices to store log information. Syslog is a protocol used for logging information from varying severity levels ranging from 0 to 7. It is used to troubleshoot and respond to issues.
+
+![image](https://github.com/user-attachments/assets/8d6d6b32-4233-4fb5-9d4b-b2fbce318cb2)
+
+How Rapid Spanning Tree Protocol works
+------------------------------------
+In this diagram, there are 4 switches, some of the links are orange, whereas others are green. RSTP (Rapid Spanning Tree Protocol) has 3 different
+![image](https://github.com/user-attachments/assets/bf3b1889-60ba-4d36-a221-a05d15ce9ecc)
+
+
+
 
 
 

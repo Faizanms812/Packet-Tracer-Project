@@ -22,7 +22,7 @@ I also successfully implemented DHCP network services on each multilayer switch.
 
 Configuring Switches and Trunking
 ---------------------------------
-Each multilayer switch has multiple VLANs configured to allow for inter-vlan routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow for the admin department to remotely access each managed switch for configuration and administrative purposes.
+Each multilayer switch has multiple VLANs configured to allow for inter-vlan routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow for the admin department to remotely access each managed switch for configuration and administrative purposes. I also added a Misc VLAN and changed the native vlan to an Unused vlan for security purposes.
 
 In this picture, I am remotely connecting to DSW1 for building A using Admin PC. I used a secure remote access protocol known as SSH and used the appropriate commands to generate an SSH key. I also added local login on the VTY lines, ACL, and only allowed SSH as communication. 
 ![image](https://github.com/user-attachments/assets/34519d4b-57f5-40b7-939c-a85fa66b8c18)

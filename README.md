@@ -2,19 +2,19 @@
 
 Introduction
 ---------------------------------
-In this project, I will be testing the knowledge I have learned from my CCNA studies using JeremysIT lab course on YouTube and Implementing it into a Campus Area Network Project. I first began by creating multiple departments such as HR, IT, and Security and using Variable Length Subnetting (VLSM) to divide my address space efficiently and still support each department's number of hosts. I also took into consideration for future expansion. I used VLSM instead of classful and FLSM subnetting is because VLSM allows flexibility when assigning IP addresses to our networks. It allows us to minimize address waste and assign just enough available addresses for the hosts on the network.
+In this project, I will be testing the knowledge I have learned from my CCNA studies using JeremysIT lab course on YouTube and Implementing it into a Campus Area Network Project. I first began by creating multiple departments such as HR, IT, and Security and using Variable Length Subnetting (VLSM) to divide my address space efficiently and still support each department's number of hosts. I also took into consideration for future expansion. I used VLSM instead of classful and FLSM subnetting is because VLSM allows flexibility when assigning IP addresses to our networks. It allows us to minimize address waste and assign just enough available addresses for the hosts on the network. I will be explaining as many concepts of networking as I can using my own knowledge.
 
 Goals for this lab
 ----------------------------
-Configure layer 2 segmentation using VLANs, Trunks, Access ports
+Configure layer 2 segmentation using VLANs, Trunks, and Access ports
 Configure layer 3 segmentation using VLSM
 Configure HSRP using SVI's
 Configuring management VLANs 
 Configuring ACLs
 Configuring SSH, FTP, NTP, DHCP, DNS
 Configuring OSPF 
-Configuring Etherchannel using PAGP
-Successfully allow all inter-vlan routing and letting all devices communicate to eachother 
+Configuring EtherChannel using PAGP
+Successfully allow all inter-VLAN routing and let all devices communicate with each other 
 
 ![image](https://github.com/user-attachments/assets/cce3e3f9-3aa1-45ab-a0eb-06bf6df7fad0)
 
@@ -28,26 +28,37 @@ Service and Remote Access
 ---------------------------------
 I also successfully implemented DHCP network services on each multilayer switch. This allows for extra redundancy for each subnet. I added a DHCP pool for each subnet with the appropriate DHCP exclusion range. DHCP allows devices to automatically obtain an IP address through a process known as DORA (Discover, Offer, Request, Acknowledge). This process begins with a device requesting an IP address by sending a DHCP discover packet with a MAC address of all F's and a source address of 0.0.0.0 since the device does not have an IP address. The DHCP server will respond with a unicast packet with an offer that will contain network configurations such as IP addressing, DNS, default gateway and subnet mask. The device will respond by sending a broadcast request message, asking for the DHCP server for this address. The DCHP server will acknowledge the request and the device has now successfully joined the network with new network configurations.
 
-Questions and Answers
+**Questions and Answers**
 
-Why use DHCP? - DHCP saves valuable time for network administrators since they do not need to manually assign an IP address to each device joining the network. It also is very user-friendly for the clients joining the network as they do not need to enter any network configurations by themselves. DHCP is an automated process that takes care of this by dynamically assigning IP addresses on a lease and using certain timers such as the T1, and T2 timers to renew the lease when needed.
+**Why use DHCP?** - DHCP saves valuable time for network administrators since they do not need to manually assign an IP address to each device joining the network. It also is very user-friendly for the clients joining the network as they do not need to enter any network configurations by themselves. DHCP is an automated process that takes care of this by dynamically assigning IP addresses on a lease and using certain timers such as the T1, and T2 timers to renew the lease when needed.
 
-Why is the MAC address all F's - A MAC address that looks like this FFFF.FFFF.FFFF is commonly known as a broadcast MAC address. This MAC address is used to send an ethernet frame to everyone on the connected network. This MAC address is commonly used in protocols such as ARP and DHCP discover packets to find devices.
+**Why is the MAC address all F's?** - A MAC address that looks like this FFFF.FFFF.FFFF is commonly known as a broadcast MAC address. This MAC address is used to send an ethernet frame to everyone on the connected network. This MAC address is commonly used in protocols such as ARP and DHCP to discover packets to find devices.
+
+**What is the default gateway?** - The default gateway is the IP address that directs traffic that end users are requesting that are not part of their local network. It is the default location that nodes such as computers and phones send their data to when the resources they are looking for are not in their local network. For instance, if you want to access this page you are reading, your device will have to send data to your default gateway since GitHub servers are not in your local network.
+
+**What is a unicast packet?** - Unicast packets are one-to-one communication between a host and the destination. 
+
+**What is a broadcast packet?** - Broadcast packets are one-to-all communication between a host and all other hosts in a network.
+
+**What is an IP address?** - An IP address is a unique identifier for nodes on a network. This allows nodes on a network to differentiate themselves from each other and allow for layer 3 communication.
 
 ![image](https://github.com/user-attachments/assets/2018d196-344d-4667-acce-18bf1d17e708)
+
 ![image](https://github.com/user-attachments/assets/f85be7c4-23fd-49a9-b41c-3d70c25611c0)
 
 Configuring Switches and Trunking
 ---------------------------------
-Each multilayer switch has multiple VLANs configured to allow for inter-vlan routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow the admin department to remotely access each managed switch for configuration and administrative purposes. I also added a Misc VLAN and changed the native VLAN to an Unused vlan for security purposes.
+Each multilayer switch has multiple VLANs configured to allow for inter-VLAN routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow the admin department to remotely access each managed switch for configuration and administrative purposes. I also added a Misc VLAN and changed the native VLAN to an Unused VLAN for security purposes.
 
 In this picture, I am remotely connecting to DSW1 for building A using Admin PC. I used a secure remote access protocol known as SSH and used the appropriate commands to generate an SSH key. I also added local login on the VTY lines, ACL, and only allowed SSH as communication. 
 
 Questions and Answers
 
+What is SSH? - SSH stands for secure shell and it is a protocol that is used to securely connect to a remote device. 
+
 ![image](https://github.com/user-attachments/assets/34519d4b-57f5-40b7-939c-a85fa66b8c18)
 
-Configuring Etherchannel
+Configuring EtherChannel
 --------------------------------
 For this step, I used EtherChannel using the protocol PAGP which is a Cisco proprietary protocol. EtherChannel allows multiple interfaces to act as a single logical interface and avoids spanning tree protocol from disabling redundant paths. This allows my logical interface to provide more bandwidth to allow for faster connection to the distribution and core layers of the network. This also avoids any oversubscription issues.
 ![image](https://github.com/user-attachments/assets/ed75a70f-826f-46d6-adba-163c47eea506)

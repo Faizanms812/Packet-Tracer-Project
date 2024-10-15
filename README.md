@@ -518,6 +518,38 @@ Configuring host files on DSW1
 Host files are a file on a device that store IP address to hostname mapping. They were used before DNS servers and were very common during the 90's.
 ![image](https://github.com/user-attachments/assets/0900ef2a-804d-4af8-922b-e45a14c2956b)
 
+Explaining DNS
+---------------------------
+What is DNS? - DNS is a hierarchal naming system that translates human readable domain names to IP addresses. DNS is the phonebook of the internet and allows users to visit websites by using a human friendly name rather than a long IP address.
+
+DNS Hierarchy - DNS is represented in a hierachal strutructure with each hierarchy being represented by a dot. For instance, take a domain name like www.google.com, .com is the TLD (Top level Domain), Google is the second level domain and www is a subdomain that part of google.com.
+
+DNS records:
+   A Record (Address Record) - Maps hostnames to IPv4
+   AAAA Record - Maps hostnames to IPv6 addresses
+   CNAME Record (Canonical Name Record) - Maps an alias to a domain name. 
+   NS record (Name server record) - the authoritative name server for a domain
+   SOA record (Start of Authority record) - Hold all administrative information of a domain
+   TXT record - used for SPF and DKIM, uses text based software
+   MX record - Specifies what mail server is responsible for sending and recieving mail in a domain.
+   PTR record - IPv4 to hostname (Reverse process)
+
+How does the DNS query work?
+   Lets say you are accessing a website such as youtube.com and you enter this in your browser. DNS will being its query process and find the IP address for youtube.com
+
+   1. Local DNS: The first step your computer takes is to check its local DNS cache and the host files. Your computer may have stored a DNS query already for youtube.com or has the IP address for the domain name in its host file.
+   2. ISP: The second step in DNS will be talking to your ISP and seeing if there DNS server has the hostname to IP address mapping for the domain you are requesting.
+   3. Root: If your ISP resolver does not have the answers, it will forward the DNS query to the Root DNS server which is responsible for TLD domains like .com, .uk, .jp, .ca. There are 13 root server clusters around the globe but in reality this consists of thousands 
+      of DNS root servers.
+   4. TLD: Afterwards the ISP resolver will keep querying DNS server and now will look at the TLD DNS server, which will provide a response of the authoritative DNS server for youtube.com.
+   5. Finale: The authoritative DNS server will now provide the IP address you are looking for and this request will be sent from your ISP resolver to your client.
+
+Note: This process is known as a recursive lookup since your ISP resolver is querying DNS servers on your behalf. This saves processing power especially on lower end systems. There is also iterative lookup where the client will query DNS servers by itself.
+
+   Types of DNS query
+      Forward DNS: Resolved hostname to IP
+      Reverse DNS (rDNS): Resolves IP to hostname
+
 Configuring DNS services
 ---------------------------------
 In this image I successfully configured DNS services in my server farm and I used commands such as domain-lookup and nameserver to allow the routers and switches to contact the DNS server to provide the proper IP address to hostname mappings if they do not contain the neccessary information in there host files.
@@ -531,6 +563,13 @@ Current Progress of my network, had to make many adjustments and changes. I got 
 ![image](https://github.com/user-attachments/assets/461e6867-421e-4171-bf6f-02e80714ee57)
 
 
+Next Steps
+----------------------
+Configuring SNMP manager 
+Configuring NAT and creating an external network
+Configuring Port security
+Configuring DAI
+Configuring a wireless network and a guest network
 
 
 

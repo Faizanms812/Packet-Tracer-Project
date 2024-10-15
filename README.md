@@ -286,10 +286,36 @@ I configured OSPF (Open shorted path first), a dynamic routing protocol that is 
       relationship with OSPF routers.
 
 **The difference between neighborship and adjacencies**
+
+   1. Neighbors - These OSPF routers establish neighborship but do not establish and share LSAs.
+      
+   2. Adjacencies: Router are fully synchronized and can exchange LSAs. Only DR and BDR can perform full adjacenies. DROther to DROther can not, they will only perform neighborship.
+
+**OSPF commands**
+
+   router ospf {process-id}
+
+   network {ip} {wildcard} area {area-id}
+
+   router-id {ip}
+
+   ip ospf {process-id} area {area-id} - enable OSPF directly on an interface
+
+   passive-interface {interface-id} - disable OSPF from sending Hello messages on certain interfaces
+
+   ip ospf cost {value} - be in interface config mode
+
+   ip ospf hello-interval {seconds}
+
+   ip ospf dead-interval {seconds}
+
+   auto-cost reference-bandwidth {Mbps}
+   
       
 ![Untitled](https://github.com/user-attachments/assets/ece9aafc-750d-4f8c-8775-22dea5cb9c8a)
 
 Current routing table (Note Building C is sill not configured)
+
 ![image](https://github.com/user-attachments/assets/fb16bdf7-180e-4b48-b4eb-1486943d8a87)
 
 Configuring NTP services

@@ -367,7 +367,6 @@ I configured OSPF (Open shorted path first), a dynamic routing protocol that is 
 
    show ip ospf summary - OSPF information in summarized format
       
-
 Current routing table for CoreR1 (Note Building C is sill not configured)
 
 ![image](https://github.com/user-attachments/assets/b72e05f0-6ba7-46ff-8842-0529b345cce9)
@@ -482,6 +481,34 @@ Applying ACLs
 ------------------------
 ACLs are a security feature in networking that filter traffic based on a set rules. This allows you to control the flow of communication between devices and deny or permit the traffic you desire. You can apply ACLs to network devices such as routers, switches and firewalls to determine if traffic should be permitted or denied based on criterias such as source and destination IP addresses, port numbers and protocols. ACLs provide a granular control over your network and can be applied to the interfaces of your device either inbound or outbound.
 
+ACLs Explained:
+   The job of ACLs is to filter traffic based on the predefined rule you apply. You can block specific IP addresses, hosts, protocols to deny access to parts of the network. ACL use ACE (Access control entries) which are rules that determine what traffic is    
+   permitted or denied. ACLs will check the list of ACEs from top to bottom making the order that you create and sequence ACEs VERY important. ACLs also have an implict deny if none of the rules in the ACL list match.
+
+Type of ACLs:
+   Standard ACLs: This type of ACLs filter traffic only based off of source IP addresses
+   Extended ACLs: This type of ACL filter traffic on more criteria such as source/destination IP, Layer 4 port addresses, Protocols such as TCP, UDP, ICMP etc.
+
+Numbers vs Named ACLs:
+   Numbered ACLs: This type of ACL uses numbers to identify itself.
+   Named ACLs: This type of ACL uses a name rather than a number, but this type of ACL provides better management, resequencing, and flexibility. Its much easer to manage named ACLs than numbered ACLs.
+
+Inbound vs Outbound
+   When applying an ACL the direction they are applied is very important. Inbound ACL will check traffic coming into the interface. Outbound ACL will check traffic going out of the interface.
+
+ACLs configuration
+
+Standard ACL
+   access-list {ACL-Num} {permit | demy} {source} {wild-mask}
+
+Extended ACL
+   access-list {ACL-Num} {permit | deny} {protocol} {source} {wildcard-mask} {destination} {wildcard-mask} {eq port}
+
+Applying ACL to an interface
+   interface {int-id}
+   ip access-group {acl-num | acl-name} {in | out}
+
+   
 In this image I applied an ACL to the SVI on vlan 10 to prevent IT and HR from accessing each others networks. I used a more granular control to allow certain devices in IT department to access the HR department for management purposes. In the multilayer switch configuration I allowed he host 10.0.0.2 to access 10.0.1.192 network but denied the rest of the hosts in any other network. I applied the ACL inbound the VLAN 10 SVI.
 
 ![image](https://github.com/user-attachments/assets/7ac759f6-4087-4761-85d7-37e9c1d4a46b)

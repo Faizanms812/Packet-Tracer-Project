@@ -79,6 +79,9 @@ Each multilayer switch has multiple VLANs configured to allow for inter-VLAN rou
 
 In this picture, I am remotely connecting to DSW1 for building A using Admin PC. I used a secure remote access protocol known as SSH and used the appropriate commands to generate an SSH key. I also added local login on the VTY lines, ACL, and only allowed SSH as communication. 
 
+![image](https://github.com/user-attachments/assets/34519d4b-57f5-40b7-939c-a85fa66b8c18)
+
+
 **Questions and Answers**
 
 **What is SSH?** - SSH stands for secure shell and it is a protocol that is used to securely connect to a remote device. SSH uses user authentication such as a username and password to validiate the client identity. The authentication method SSH uses is either password based or public key based authentication. SSH also uses data encryption making text unreadable when it is transferred over the network. SSH also performs checksum to ensure integrity of data has remained valid. It also can be used for file transfer protocols such as SCP and SFTP to securely transfer files between devices. Currently there are two versions of SSH, SSH version 1 and SSH verison 2. 
@@ -89,7 +92,15 @@ In this picture, I am remotely connecting to DSW1 for building A using Admin PC.
 
 **What is the native VLAN?** - The native VLAN is by default VLAN 1 when using 802.1q technology. The native VLAN does not tag any traffic that is passing through on the trunk port. When a switch recieve traffic that is untagged on the trunk port it will associate it with the native VLAN. You can also follow the best practice of changing the native VLAN to an unused VLAN to prevent VLAN hopping attacks.
 
-![image](https://github.com/user-attachments/assets/34519d4b-57f5-40b7-939c-a85fa66b8c18)
+This is my trunk configuration for ASW2 in Sales
+
+![image](https://github.com/user-attachments/assets/0cc2e429-081a-4723-8b27-2285f2f35eea)
+
+Access port information for ASW2 on sales, currently DTP is on and I will later turn it off for security purposes.
+
+![image](https://github.com/user-attachments/assets/353f73e3-3392-4da7-8270-2cb54acae20a)
+
+**What is DTP?** - DTP is a Cisco protocol known as Dynamic trunking protocol and allows switches to dynamically negotiate if a link should be a trunk or not.
 
 **Commands used to create trunk ports**
 
@@ -122,6 +133,19 @@ ip address {ip} {subnet mask}
 no shutdown 
 
 Note: Remember SVI's are shutdown by default when created. Additionally SVI's will NOT turn on if there is no connected trunk port or device to that VLAN ID.
+
+SVIs for DSW1 for building A
+
+![image](https://github.com/user-attachments/assets/e0434029-be77-458c-a3fd-6221747da2f2)
+
+SVIs for DSW2 for building B
+
+![image](https://github.com/user-attachments/assets/a4a1fada-b6ba-4905-b97c-ead0d9a60963)
+
+SVIs for DSW1 for building C
+
+![image](https://github.com/user-attachments/assets/f7241f28-8ade-4453-85a2-58d9da7f565e)
+
 
 Configuring EtherChannel
 --------------------------------
@@ -251,6 +275,17 @@ Configuring HSRP for Building A
 
 ![image](https://github.com/user-attachments/assets/afa7fe7f-51e7-4fc3-9d2c-990d54887f03)
 
+HSRP for building B
+------------------
+
+![image](https://github.com/user-attachments/assets/26e8e4d6-a338-44d5-960a-0afa4dd5805b)
+
+HSRP for building C
+------------------------
+
+![image](https://github.com/user-attachments/assets/164d8507-6ae0-472f-8c27-4f4c617fef03)
+
+
 Successful ping between Building A and Building B
 ------------------------------------------
 I configured OSPF (Open shorted path first), a dynamic routing protocol that is used to learn routes to different networks using Dijkstra's algorithm. OSPF is an interior gateway protocol (IGP) that operates in a single autonomous system (AS). AD stands for administrative distance and allows the router to determine the most trust worthy route. A lower AD equals a more reliable route. OSPF metric to determine the best path to a node is cost. It uses a reference bandwidth which by default is 100 Mb to determine the best path to the destination. OSPF uses hello packets which are multicast address 224.0.0.5 and 224.0.0.6 to communicate and establish neighborship with other OSPF enabled routers.
@@ -310,13 +345,32 @@ I configured OSPF (Open shorted path first), a dynamic routing protocol that is 
    ip ospf dead-interval {seconds}
 
    auto-cost reference-bandwidth {Mbps}
-   
+
+**OSPF show commands**
+
+   show ip ospf neighbor - Shows OSPF neighbors and their states (DR, BDR, DRother)
+
+   show ip route ospf - Router learned by OSPF
+
+   show ip ospf - Details about OSPF like RID, process id, area, LSA
+
+   show ip ospf database - All the LSA in the router
+
+   show ip ospf summary - OSPF information in summarized format
       
 ![Untitled](https://github.com/user-attachments/assets/ece9aafc-750d-4f8c-8775-22dea5cb9c8a)
 
 Current routing table (Note Building C is sill not configured)
 
 ![image](https://github.com/user-attachments/assets/fb16bdf7-180e-4b48-b4eb-1486943d8a87)
+
+OSPF database
+
+![image](https://github.com/user-attachments/assets/f2acbe29-5d31-43f8-ad9f-971f2e02eca9)
+
+OSPF neighbors
+
+![image](https://github.com/user-attachments/assets/d719d932-a644-48af-b724-fab9d62e6ef3)
 
 Configuring NTP services
 --------------------------------------------

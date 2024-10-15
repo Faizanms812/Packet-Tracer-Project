@@ -607,6 +607,17 @@ Configuring a wireless network and a guest network
 
 Configure GRE tunneling
 
+Disable CDP and LLDP for security purposes
+
+Try configuring my network to be dual stacked IPv4 and Ipv6
+
+Configuring RSTP-PVST+
+
+Disabling DTP for security
+
+Configuring TFTP services
+
+
 
 
 

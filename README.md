@@ -294,6 +294,9 @@ HSRP for building C
 
 Successful ping between Building A and Building B
 ------------------------------------------
+
+![image](https://github.com/user-attachments/assets/e8e9e47c-2587-484b-9854-001bdfab2bc9)
+
 I configured OSPF (Open shorted path first), a dynamic routing protocol that is used to learn routes to different networks using Dijkstra's algorithm. OSPF is an interior gateway protocol (IGP) that operates in a single autonomous system (AS). AD stands for administrative distance and allows the router to determine the most trust worthy route. A lower AD equals a more reliable route. OSPF metric to determine the best path to a node is cost. It uses a reference bandwidth which by default is 100 Mb to determine the best path to the destination. OSPF uses hello packets which are multicast address 224.0.0.5 and 224.0.0.6 to communicate and establish neighborship with other OSPF enabled routers.
 
 **OSPF Concepts**
@@ -364,7 +367,6 @@ I configured OSPF (Open shorted path first), a dynamic routing protocol that is 
 
    show ip ospf summary - OSPF information in summarized format
       
-![Untitled](https://github.com/user-attachments/assets/ece9aafc-750d-4f8c-8775-22dea5cb9c8a)
 
 Current routing table for CoreR1 (Note Building C is sill not configured)
 
@@ -382,24 +384,105 @@ OSPF neighbors for CoreR1
 
 Configuring NTP services
 --------------------------------------------
-NTP is essential to have on a network to allow devices to accurately synch there clocks. This is very important for logging and troubleshooting information. NTP stands for network time protocol and uses UDP port 123. 
+NTP is essential to have on a network to allow devices to accurately synchronize there clocks. This is very important for logging, security certificates, and troubleshooting information. NTP stands for network time protocol and uses UDP port 123. 
+
+**Concepts of NTP**
+
+   1. Time Synchronization: NTP sync networked devices to the UTC timezone
+      
+   2. Stratum: NTP uses a hierarchy of systems to provide time sources known as stratum levels. Devices with lower stratum always have a more reliable and accurate time. Atomic clocks are stratum 0, which is the most reliable time source. Stratum 1 are devices that get       there time from stratum 0. Stratum 2 get there time from stratum 1 and so on. After stratum 15 the time source becomes too unreliable, so 15 is the limit. Additionally, stratum 1 servers are called primary servers and below that are secondary servers.
+      
+   3. Security: You can also create NTP security keys to ensure your time source is coming from a trusted device.
+
+**How NTP works?**
+
+   NTP uses a client-server model where clients requests services from an NTP server that adjust their local clock accordingly.
+
+Commands to configure NTP on network devices
+
+   ntp server {ntp-server-ip} [prefer]
+
+   show ntp associations
+
+   ntp master {stratum} - Create your own NTP server
+
+   ntp authenticate
+
+   ntp authentication-key {key-num} md5 {password}
+
+   ntp trusted-key {key-num}
+
+   ntp server {ntp-serv-ip} key {key-num}
+
+NTP server that CoreR1 is using to get its time
+
+![image](https://github.com/user-attachments/assets/84ada2cb-5571-4bdc-9dd1-ff22c87a38b7)
+
 ![image](https://github.com/user-attachments/assets/22bc759c-6434-49af-8a82-af0157b5497a)
 
 Configuring Syslog services
 ------------------------------------------
-Successfully configured a dedicate syslog server to allow networking devices to store log information. Syslog is a protocol used for logging information from varying severity levels ranging from 0 to 7. It is used to troubleshoot and respond to issues.
+Successfully configured a dedicate syslog server to allow networking devices to store log information. Syslog is a protocol used for logging information from varying severity levels ranging from 0 to 7. Syslog allows network administrator to collect, store and analyze log data to track events and issues.
+
+Components of Syslog:
+   1. Syslog client: Network deivces such as routers, switches generate log messages and sends them to the syslog server
+      
+   2. Syslog server: A syslog server is a dedicate device that will recieve and store all log information. In my network I have a dedicated syslog server that will recieve all the events such as an interface turning off, or an OSPF neighbor reaching its dead timer.
+
+   Severity Levels
+   0. Emergency - System is unusable
+   1. Alert - Immediate action is required
+   2. Critical - Critical condition
+   3. Error - Error condition
+   4. Warning - Warning condition
+   5. Notice - Normal
+   6. Informational - informational message
+   7. Debug - Debug-level message
+
+**How Syslog works**
+
+   A system issue can arise on a device such as an interface going down or ospf lost neighborship. This will create a syslog message and include information such as the event, facility and severity level. This message can either be stored in the internal buffer of a    
+   device or sent to a syslog server using UDP port 514. The syslog server will store this information.
+
+**Syslog commands**
+
+   logging {syslog-ip} - log syslog data to an external server
+
+   logging console {level} - log syslog console events and specify serverity level
+
+   logging buffered {size} {level} - log syslog messages in network devices buffer
+
+   logging monitor {level} - this can send syslog messages to client using SSH or Telnet, by default SSH and telnet do not show syslog message on the VTY lines.
+
+   service timestamps log datetime msec - include timestamps in syslog messages
+
+   show logging - show syslog data
 
 ![image](https://github.com/user-attachments/assets/8d6d6b32-4233-4fb5-9d4b-b2fbce318cb2)
 
 Successful file transfer using FTP protocol
 ----------------------------------------
 FTP stands for file transfer protocol, a protocol used to transfer files from one device to another. It uses authentication methods such as username and password but has no encryption ability. I created a username and password for my device in the IT network to remotely connect to the FTP server and download the files it needs.
+
+**Key concepts**
+   1. File transfer: FTP allows you to recieve and download files between client and server
+      
+   2. Authentication: FTP uses username and password to validate the person logging in
+      
+   3. Directory management: FTP uses commands to provide directory navigation, list files and create directories.
+      
+   4. FTP uses two channels for communication, port 21 for sending commands and port 20 to transfer files
+
+**Considerations when using FTP**
+   FTP by itself is insecure since it does not provide any encryption mechanisms. All data send via FTP will be sent in plain-text including username and password. You can use other protocols like SCP or SFTP to encrypt your data.
+   
 ![image](https://github.com/user-attachments/assets/b3dd433f-a35a-40b3-813a-2b1aaf201a3c)
 
 Applying ACLs
 ------------------------
+ACLs are a security feature in networking that filter traffic based on a set rules. This allows you to control the flow of communication between devices and deny or permit the traffic you desire. You can apply ACLs to network devices such as routers, switches and firewalls to determine if traffic should be permitted or denied based on criterias such as source and destination IP addresses, port numbers and protocols. ACLs provide a granular control over your network and can be applied to the interfaces of your device either inbound or outbound.
 
-Applying ACLs to prevent unauthorized access to departments. In this image I applyed an ACL to the SVI on vlan 10 to prevent IT and HR from accessing each others networks. I used a more granular control to allow certain devices in IT department to access the HR department for management purposes. In the multilayer switch configuration I allowed he host 10.0.0.2 to access 10.0.1.192 network but denied the rest of the hosts in any other network. I applied the ACL inbound the VLAN 10 SVI.
+In this image I applied an ACL to the SVI on vlan 10 to prevent IT and HR from accessing each others networks. I used a more granular control to allow certain devices in IT department to access the HR department for management purposes. In the multilayer switch configuration I allowed he host 10.0.0.2 to access 10.0.1.192 network but denied the rest of the hosts in any other network. I applied the ACL inbound the VLAN 10 SVI.
 
 ![image](https://github.com/user-attachments/assets/7ac759f6-4087-4761-85d7-37e9c1d4a46b)
 

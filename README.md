@@ -31,7 +31,7 @@ At this stage, I have implemented this design of the network. I have multiple bu
 
 **Questions and Answers**
 
-**Why add redundancy** - Redundancy is critical in any enterprise networks. This is because if one service fails such as the default gateway to other subnets, this could disrupt services and resources being accessed by your network. Another example can be if a critical router or switch fails its important to implement a plan for a backup device. This allows you to minimize downtime and keep operation running as normal. 
+**Why add redundancy** - Redundancy is critical in any enterprise networks. This is because if one service fails such as the default gateway to other subnets, this could disrupt services and resources being accessed by your network. Another example can be if a critical router or switch fails its important to implement a plan for a backup device. This allows you to minimize downtime and keep operation running as normal. In my network I have implemented redundancy by having multiple switches, routers and services. I also have HSRP to have a backup router for each network to prevent any unwanted network outages.
 
 **Why have multiple devices running services such as NTP, DHCP, and DNS?** - As I mentioned earlier it all comes down to redundancy. Critical services such as DHCP is a must in many networks, so in my network I have added DHCP on the multilayer switch and also included a helper address acting as a backup. 
 
@@ -43,15 +43,15 @@ I also successfully implemented DHCP network services on each multilayer switch.
 
 **Questions and Answers**
 
-**Why use DHCP?** - DHCP saves valuable time for network administrators since they do not need to manually assign an IP address to each device joining the network. It also is very user-friendly for the clients joining the network as they do not need to enter any network configurations by themselves. DHCP is an automated process that takes care of this by dynamically assigning IP addresses on a lease and using certain timers such as the T1, and T2 timers to renew the lease when needed.
+**Why use DHCP?** - DHCP saves valuable time for network administrators since they do not need to manually assign an IP address to each device joining the network. It also is very user-friendly for the clients joining the network as they do not need to enter any network configurations by themselves. DHCP is an automated process that takes care of this by dynamically assigning IP addresses on a lease and using certain timers such as the T1, and T2 timers to renew the lease when needed. I use DHCP in my network for each building to provide quality of life to my clients and to save valuable time for my network administrator.
 
 **Why is the MAC address all F's?** - A MAC address that looks like this FFFF.FFFF.FFFF is commonly known as a broadcast MAC address. This MAC address is used to send an ethernet frame to everyone on the connected network. This MAC address is commonly used in protocols such as ARP and DHCP to discover packets to find devices.
 
 **What is the default gateway?** - The default gateway is the IP address that directs traffic that end users are requesting that are not part of their local network. It is the default location that nodes such as computers and phones send their data to when the resources they are looking for are not in their local network. For instance, if you want to access this page you are reading, your device will have to send data to your default gateway since GitHub servers are not in your local network.
 
-**What is a unicast packet?** - Unicast packets are one-to-one communication between a host and the destination. 
+**What is a unicast packet?** - Unicast packets are one-to-one communication between a host and the destination. For instance, if I ping using the computer in the IT department to a host in the security department, this is a unicast message. 
 
-**What is a broadcast packet?** - Broadcast packets are one-to-all communication between a host and all other hosts in a network.
+**What is a broadcast packet?** - Broadcast packets are one-to-all communication between a host and all other hosts in a network. For example, an ARP request would be considered a broadcast packet.
 
 **What is an IP address?** - An IP address is a unique identifier for nodes on a network. This allows nodes on a network to differentiate themselves from each other and allow for layer 3 communication.
 
@@ -79,7 +79,7 @@ Each multilayer switch has multiple VLANs configured to allow for inter-VLAN rou
 
 In this picture, I am remotely connecting to DSW1 for building A using Admin PC. I used a secure remote access protocol known as SSH and used the appropriate commands to generate an SSH key. I also added local login on the VTY lines, ACL, and only allowed SSH as communication. 
 
-Questions and Answers
+**Questions and Answers**
 
 **What is SSH?** - SSH stands for secure shell and it is a protocol that is used to securely connect to a remote device. SSH uses user authentication such as a username and password to validiate the client identity. The authentication method SSH uses is either password based or public key based authentication. SSH also uses data encryption making text unreadable when it is transferred over the network. SSH also performs checksum to ensure integrity of data has remained valid. It also can be used for file transfer protocols such as SCP and SFTP to securely transfer files between devices. Currently there are two versions of SSH, SSH version 1 and SSH verison 2. 
 
@@ -206,10 +206,41 @@ HSRP stands for hot standby routing protocol and allows for a virtual default ga
 
    There are 6 steps in the HSRP process, initial, learn, listen, speak, standby, and active. Lets take a closer look at each of these steps.
 
-   1.
+   1. Initial: This is where the router is starting up.
+   2. Learn: The router is currently not aware of any HSRP hello messages and does not know the VIP
+   3. Listen: The router is aware of the VIP but has not determined the active or standby router
+   4. Speak: The router will send hello messages and now begin the HSRP election process
+   5. Standby: The router will become the standby router
+      OR
+   6. Active: This router is forwarding traffic and will respond to ARP
+      
+   **HSRP CONFIGURATION**
 
+   interface {int-id}
 
+   ip address {ip} {mask} - begin by assiging an address to the interface you are working on
 
+   standby {group-number} ip {ip address} - This defines the HSRP group and creates the VIP
+
+   standby {group-number} priority {number} - This changes the priority of the router which changes the speak state of HSRP where the election process begins. It's good to change the priority between VLANs to provide load balacning.
+
+   standby {group-number} preempt - This enable preemption
+
+   standby {group-number} version {number} - HSRP has two versions, 1 and 2.
+
+   standby {group-number} timer {hello-interval} {hold-time} - Keep this at default but this command is optional
+
+   **HSRP show commands**
+
+   show standby
+
+   show standby brief
+
+   show standby timers
+
+   **Whats the difference between HSRP version 1 and 2**
+
+   
 ![image](https://github.com/user-attachments/assets/e0f94d88-d08b-4398-9b9b-cae1aae5eedf)
 
 Configuring HSRP for Building A

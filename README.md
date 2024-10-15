@@ -14,13 +14,21 @@ Note: I will keep updating this picture below as I progress and learn more about
 Goals for this lab
 ----------------------------
 Configure layer 2 segmentation using VLANs, Trunks, and Access ports
+
 Configure layer 3 segmentation using VLSM
-Configure HSRP using SVI's
+
+Configure HSRP using SVI's 
+
 Configuring management VLANs 
-Configuring ACLs
-Configuring SSH, FTP, NTP, DHCP, DNS
+
+Configuring ACLs 
+
+Configuring SSH, FTP, NTP, DHCP, DNS, TFTP, SNMP, NAT, DAI, 802.1X, GRE
+
 Configuring OSPF 
+
 Configuring EtherChannel using PAGP
+
 Successfully allow all inter-VLAN routing and let all devices communicate with each other 
 
 ![image](https://github.com/user-attachments/assets/cce3e3f9-3aa1-45ab-a0eb-06bf6df7fad0)
@@ -562,9 +570,31 @@ Current Progress of my network, had to make many adjustments and changes. I got 
 
 ![image](https://github.com/user-attachments/assets/461e6867-421e-4171-bf6f-02e80714ee57)
 
+Checklist
+---------------------
+**Goals for this lab**
+
+Configure layer 2 segmentation using VLANs, Trunks, and Access ports **(done)**
+
+Configure layer 3 segmentation using VLSM **(done)**
+
+Configure HSRP using SVI's **(done)**
+
+Configuring management VLANs **(done)**
+
+Configuring ACLs **(half way done)**
+
+Configuring SSH, FTP, NTP, DHCP, DNS, TFTP, SNMP, NAT, DAI, 802.1X, GRE **(half way done)**
+
+Configuring OSPF **(done)**
+
+Configuring EtherChannel using PAGP **(done)**
+
+Successfully allow all inter-VLAN routing and let all devices communicate with each other **(done)**
 
 Next Steps
 ----------------------
+
 Configuring SNMP manager 
 
 Configuring NAT and creating an external network

@@ -182,9 +182,9 @@ Types of EtherChannel
 
 ![image](https://github.com/user-attachments/assets/ed75a70f-826f-46d6-adba-163c47eea506)
 
-Configuring HSRP
+What is HSRP?
 -------------------------------
-HSRP stands for hot standby routing protocol and allows for a virtual default gateway to be used which provide redundnacy on the network. It allows routers to work together and appear as a single virtual router from the perspective of the hosts on the network. If one router fails the hosts on the network will not lose connection since another router can take its place. I load balanced between each vlan by having my active and standby router different per vlan. I updated my DHCP pool for each VLAN as well to ensure all devices default gateway points to the virtual IP address.
+HSRP stands for hot standby routing protocol and allows for a virtual default gateway to be used which provide redundnacy on the network. It allows routers to work together and appear as a single virtual router from the perspective of the hosts on the network. If one router fails the hosts on the network will not lose connection since another router can take its place. I load balanced between each vlan by having my active and standby router different per vlan. I updated my DHCP pool for each VLAN as well to ensure all devices default gateway points to the virtual IP address. 
 
 **Terminology for HSRP**
 
@@ -240,17 +240,53 @@ HSRP stands for hot standby routing protocol and allows for a virtual default ga
 
    **Whats the difference between HSRP version 1 and 2**
 
+   HSRP V1: Version 1 of HSRP supports only 255 groups and uses mutlicast address 224.0.0.2
+
+   HSRP V2: Version 2 supports 4096 groups and uses multicast address 224.0.0.102.
    
 ![image](https://github.com/user-attachments/assets/e0f94d88-d08b-4398-9b9b-cae1aae5eedf)
 
 Configuring HSRP for Building A
 ------------------------------------
-![image](https://github.com/user-attachments/assets/afa7fe7f-51e7-4fc3-9d2c-990d54887f03)
 
+![image](https://github.com/user-attachments/assets/afa7fe7f-51e7-4fc3-9d2c-990d54887f03)
 
 Successful ping between Building A and Building B
 ------------------------------------------
-I configured OSPF (Open shorted path first), a dynamic routing protocol that is used to learn routes to different networks using Dijkstra's algorithm. OSPF has an AD value of 110. AD stands for administrative distance and allows the router to determine the most trust worthy route. A lower AD equals a more reliable route. OSPF metric to determine the best path to a node is cost. It uses a reference bandwidth which by default is 100 Mb to determine the best path to the destination. 
+I configured OSPF (Open shorted path first), a dynamic routing protocol that is used to learn routes to different networks using Dijkstra's algorithm. OSPF is an interior gateway protocol (IGP) that operates in a single autonomous system (AS). AD stands for administrative distance and allows the router to determine the most trust worthy route. A lower AD equals a more reliable route. OSPF metric to determine the best path to a node is cost. It uses a reference bandwidth which by default is 100 Mb to determine the best path to the destination. OSPF uses hello packets which are multicast address 224.0.0.5 and 224.0.0.6 to communicate and establish neighborship with other OSPF enabled routers.
+
+**OSPF Concepts**
+
+   1. Link-state Protocol: OSPF routers will exchange information with all other routes and create a complete network map known as the link-state database (LSDB). Routers can use this map to determine the shortest and cheapest path to the destination.
+
+   2. Cost: OSPF uses costs to determine the best path to the destination. By default OSPF has a reference bandwidth of 100Mbs and should be changed to a different bandwidth when configuring OSPF. The lower the cost the better the path.
+
+   3. Convergence: When changes occur such as a network link going down, OSPF can quickly change the network map in the LSDB and send updates to other routers that are affected.
+
+   4. Areas: OSPF also can segment networks into smaller areas which can reduce the size of routing tables and minimze network traffic
+
+**How OSPF creates neighborship**
+
+   OSPF has multiple states it goes through to create neighborship and exchange routing table information
+
+   1. DOWN - The initial state of OSPF where the router has not attempted to contact its neighbors, nor has it recieved any hello packets.
+      
+   2. Init - The init state is when a OSPF enabled router recieves a Hello packet from a neighboring router. However two-way communication is still not established
+      
+   3. 2-way - Both routers have recieved hello packets from eachother and there own RID (Router-id) is in the hello messages. This state OSPF adjacencies are fully formed. Additionally DR and BDR routers are selected at this state.
+
+   4. ExStart - This state determines which router will initate the sending of DBD (Database description) packets which contain a list of LSA in a routers LSDB. The router with the higher router ID (RID) will become the Master and the lower RID router will be the Slave.
+
+   5. Exchange - This state the routers begin the actual exchange of DBD packets. Router use the information inside of the DBD packet and compare it to there own LSDB and determine which LSA they need to request from the other router.
+
+   6. Loading - The routers exchange specific LSAs and request any missing or changed LSA from there neighboring router using LSR (link state request packets). LSA packets are then sent using LSU (link state update) packets. This process will keep going until both    
+      routers have an updated network map.
+
+   7. Full - This stage establishes full adjaceny between OSPF routers. Once both routers have an updated network map, they will transition into the full state and exchange OSPF hello messages to maintain neighborship. This stage is all about maintaining the    
+      relationship with OSPF routers.
+
+**The difference between neighborship and adjacencies**
+      
 ![Untitled](https://github.com/user-attachments/assets/ece9aafc-750d-4f8c-8775-22dea5cb9c8a)
 
 Current routing table (Note Building C is sill not configured)

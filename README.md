@@ -22,6 +22,12 @@ Layout and Design
 ---------------------------------
 At this stage, I have implemented this design of the network. I have multiple buildings and departments and implemented redundancy, 3-tier architecture and a dedicated server network that will provide essential services such as NTP, DHCP, and DNS to the entire CAN network. I added redundancy to the network to ensure each department can access the required services and minimize downtime, which could impact the business greatly. I have multiple devices running critical services such as DHCP, NTP and DNS to make sure these services do not fail as they are critical to network operation.
 
+**Questions and Answers**
+
+**Why add redundancy** - Redundancy is critical in any enterprise networks. This is because if one service fails such as the default gateway to other subnets, this could disrupt services and resources being accessed by your network. Another example can be if a critical router or switch fails its important to implement a plan for a backup device. This allows you to minimize downtime and keep operation running as normal. 
+
+**Why have multiple devices running services such as NTP, DHCP, and DNS?** - As I mentioned earlier it all comes down to redundancy. Critical services such as DHCP is a must in many networks, so in my network I have added DHCP on the multilayer switch and also included a helper address acting as a backup. 
+
 ![image](https://github.com/user-attachments/assets/4f48c90c-2ae3-4efc-b7e1-95ffa173a4ab)
 
 Service and Remote Access
@@ -46,6 +52,20 @@ I also successfully implemented DHCP network services on each multilayer switch.
 
 ![image](https://github.com/user-attachments/assets/f85be7c4-23fd-49a9-b41c-3d70c25611c0)
 
+**Command to configure DHCP**
+
+ip dhcp excluded-address {ip-low} {ip-high}
+
+ip dhcp pool {Pool name}
+
+network {ip} {subnetmask}
+
+default-router {ip}
+
+dns-server {ip}
+
+lease {hh:mm:ss}
+
 Configuring Switches and Trunking
 ---------------------------------
 Each multilayer switch has multiple VLANs configured to allow for inter-VLAN routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow the admin department to remotely access each managed switch for configuration and administrative purposes. I also added a Misc VLAN and changed the native VLAN to an Unused VLAN for security purposes.
@@ -54,9 +74,47 @@ In this picture, I am remotely connecting to DSW1 for building A using Admin PC.
 
 Questions and Answers
 
-What is SSH? - SSH stands for secure shell and it is a protocol that is used to securely connect to a remote device. 
+**What is SSH?** - SSH stands for secure shell and it is a protocol that is used to securely connect to a remote device. SSH uses user authentication such as a username and password to validiate the client identity. The authentication method SSH uses is either password based or public key based authentication. SSH also uses data encryption making text unreadable when it is transferred over the network. SSH also performs checksum to ensure integrity of data has remained valid. It also can be used for file transfer protocols such as SCP and SFTP to securely transfer files between devices. Currently there are two versions of SSH, SSH version 1 and SSH verison 2. 
+
+**Why I choose to use SSH rather than Telnet?** - I used SSH because it provides security, encryption and uses strong authentication methods. Telnet provides no encryption and all data that is sent is in plain-text including username and password.
+
+**What is 802.1q tagging?** - 802.1q tagging is a standard developed by the IEEE that defines how ethernet frames will be tagged with VLAN information. 802.1q is a technology that allows the concept of trunking possible on switches and lets all VLANs share the same phyiscal link. An additional header called the VLAN tag is inserted into the Ethernet frame, acting as an identifier for that VLAN. The 802.1q tag is 4-byte in length with 4 different fields. The first field is the TPID (tag protocol identifier) which is a 2 byte field that has a value of 0x8100 to determine the VLAN tag. The 2nd field is the PCP (Priority code point) which is a 3 bit field use for quality of service. QOS (Quality of Service) allows you to priortize traffic from most important to least. The 3rd field is DEI (Drop eligible indicator) this is a 1 bit field used to determine if a frame should be dropped. The DEI is crucial if the network becomes congested. The last field is the VID (VLAN ID) which indicate what VLAN the frame belongs. This field can have VLAN ranges from 0 to 4096, however VLAN 1 and 4095 are reserved.
+
+**What is the native VLAN?** - The native VLAN is by default VLAN 1 when using 802.1q technology. The native VLAN does not tag any traffic that is passing through on the trunk port. When a switch recieve traffic that is untagged on the trunk port it will associate it with the native VLAN. You can also follow the best practice of changing the native VLAN to an unused VLAN to prevent VLAN hopping attacks.
 
 ![image](https://github.com/user-attachments/assets/34519d4b-57f5-40b7-939c-a85fa66b8c18)
+
+**Commands used to create trunk ports**
+
+interface (int-id)
+
+switchport mode trunk
+
+switchport trunk allowed vlan add {vlan-id}
+
+switchport trunk native vlan (vlan-id)
+
+Note - Instead of "add" you can use keywords such as except, remove, none, all depending on your requirements.
+
+**Command used to create access ports**
+
+interface (int-id)
+
+switchport mode access
+
+switchport access vlan {vlan-id}
+
+**Commands used to create SVI**
+
+vlan {number} 
+
+interface {vlan-id}
+
+ip address {ip} {subnet mask}
+
+no shutdown 
+
+Note: Remember SVI's are shutdown by default when created. Additionally SVI's will NOT turn on if there is no connected trunk port or device to that VLAN ID.
 
 Configuring EtherChannel
 --------------------------------

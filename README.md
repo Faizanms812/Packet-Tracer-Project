@@ -566,10 +566,18 @@ Current Progress of my network, had to make many adjustments and changes. I got 
 Next Steps
 ----------------------
 Configuring SNMP manager 
+
 Configuring NAT and creating an external network
+
 Configuring Port security
+
 Configuring DAI
+
 Configuring a wireless network and a guest network
+
+Configure GRE tunneling
+
+
 
 
 

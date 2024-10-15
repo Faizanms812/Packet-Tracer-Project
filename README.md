@@ -118,7 +118,66 @@ Note: Remember SVI's are shutdown by default when created. Additionally SVI's wi
 
 Configuring EtherChannel
 --------------------------------
-For this step, I used EtherChannel using the protocol PAGP which is a Cisco proprietary protocol. EtherChannel allows multiple interfaces to act as a single logical interface and avoids spanning tree protocol from disabling redundant paths. This allows my logical interface to provide more bandwidth to allow for faster connection to the distribution and core layers of the network. This also avoids any oversubscription issues.
+For this step, I used EtherChannel using the protocol PAGP which is a Cisco proprietary protocol. EtherChannel allows multiple interfaces to act as a single logical interface and avoids spanning tree protocol from disabling redundant paths. This allows my logical interface to provide more bandwidth to allow for faster connection to the distribution and core layers of the network. For instance, if you have a five 1Gbps links and bundle all of them in an EtherChannel this will provide 5Gbps of bandwidth.
+
+Types of EtherChannel
+
+1. **LACP (Link Aggregation Control Protocol) - IEEE 802.3ad**
+
+   This is an industry-standard protocol that can be used across all vendors and allows the aggregations of multiple links. There are two forms of LACP, active and passive.
+
+     **Active:** This will tell the switch interface running LACP to actively form a EtherChannel
+   
+     **Passive:** This will tell the switch interface running LACP to not actively form a EtherChannel
+
+2. **PAgP (Port Aggregation Protocol) - Cisco Proprietary**
+
+   PAgP is a technology that is designed by Cisco and only works between Cisco devices. PAgP has two forms known as desirable and auto.
+
+     **Desirable:** Actively creates an EtherChannel
+     **Auto:** Only creates EtherChannel if the other side is willing to initiate.
+
+3. **Static (Manual EtherChannel)**
+
+   This type of EtherChannel is manually configured by the user and you will have to enable EtherChannel on both sides, there is no negotation process like there is in LACP and PAgP.
+
+**Commands to show and configure EtherChannel**
+
+  interface range {int-low}-{int-high}
+
+  channel-group 1 mode {active, passive, desirable, auto, on}
+
+  interface Port-channel 1
+
+  switchport mode trunk
+
+**Common show commands for EtherChannel**
+
+  show etherchannel summary
+
+  show etherchannel port-channel
+
+  show interfaces port-channel 1
+
+**Considerations when making a EtherChannel**
+
+  1. Configuration must MATCH on both sides
+     
+     - Interfaces that are in an EtherChannel MUST be IDENTICAL on both sides. This include duplex, speed, mode, VLANs.
+
+  3. Port Compatibility
+
+     - You can not mix gigabit interfaces with fastethernet
+    
+  4. Number of links must remain the same
+
+     - One end can't have less or more than the other end. The link numbers on both ends MUST MATCH
+
+  
+
+  
+
+
 ![image](https://github.com/user-attachments/assets/ed75a70f-826f-46d6-adba-163c47eea506)
 
 Configuring HSRP

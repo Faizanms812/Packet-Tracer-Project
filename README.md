@@ -20,23 +20,31 @@ Successfully allow all inter-vlan routing and letting all devices communicate to
 
 Layout and Design
 ---------------------------------
-At this stage, I have implemented this design of the network. I have multiple buildings and departments and also implemented redundancy, 3 tier architecture and a dedicated network for servers that will provide essential services such as NTP, DHCP, and DNS to the entire CAN network. I added redundancy to the network to ensure each department can access the services they require and minimize any downtime as this could impact the business greatly. I have multiple devices running critical services such as DHCP, NTP and DNS to make sure these services do not fail as they are critical to network operation.
+At this stage, I have implemented this design of the network. I have multiple buildings and departments and implemented redundancy, 3-tier architecture and a dedicated server network that will provide essential services such as NTP, DHCP, and DNS to the entire CAN network. I added redundancy to the network to ensure each department can access the required services and minimize downtime, which could impact the business greatly. I have multiple devices running critical services such as DHCP, NTP and DNS to make sure these services do not fail as they are critical to network operation.
 
 ![image](https://github.com/user-attachments/assets/4f48c90c-2ae3-4efc-b7e1-95ffa173a4ab)
 
 Service and Remote Access
 ---------------------------------
-I also successfully implemented DHCP network services on each multilayer switch. This allows for extra redundancy for each subnet. I added a DHCP pool for each subnet with the appropriate DHCP exclusion range. DHCP allows devices to automatically obtain an IP address through a process known as DORA (Discover, Offer, Request, Acknowledge). This process begins with a device requesting an IP address by sending a DHCP discover packet with a MAC address of al F's and a source address of 0.0.0.0 since the device does not have an IP address. The DHCP server will respond with a unicast packet with an offer that will contain network configurations such as IP addressing, DNS, default gateway and subnet mask. The device will respond by sending a broadcast request message, asking for the DHCP server for this address. The DCHP server will acknowledge the request and the device has now successfully joined the network with new network configurations.
+I also successfully implemented DHCP network services on each multilayer switch. This allows for extra redundancy for each subnet. I added a DHCP pool for each subnet with the appropriate DHCP exclusion range. DHCP allows devices to automatically obtain an IP address through a process known as DORA (Discover, Offer, Request, Acknowledge). This process begins with a device requesting an IP address by sending a DHCP discover packet with a MAC address of all F's and a source address of 0.0.0.0 since the device does not have an IP address. The DHCP server will respond with a unicast packet with an offer that will contain network configurations such as IP addressing, DNS, default gateway and subnet mask. The device will respond by sending a broadcast request message, asking for the DHCP server for this address. The DCHP server will acknowledge the request and the device has now successfully joined the network with new network configurations.
 
+Questions and Answers
+
+Why use DHCP? - DHCP saves valuable time for network administrators since they do not need to manually assign an IP address to each device joining the network. It also is very user-friendly for the clients joining the network as they do not need to enter any network configurations by themselves. DHCP is an automated process that takes care of this by dynamically assigning IP addresses on a lease and using certain timers such as the T1, and T2 timers to renew the lease when needed.
+
+Why is the MAC address all F's - A MAC address that looks like this FFFF.FFFF.FFFF is commonly known as a broadcast MAC address. This MAC address is used to send an ethernet frame to everyone on the connected network. This MAC address is commonly used in protocols such as ARP and DHCP discover packets to find devices.
 
 ![image](https://github.com/user-attachments/assets/2018d196-344d-4667-acce-18bf1d17e708)
 ![image](https://github.com/user-attachments/assets/f85be7c4-23fd-49a9-b41c-3d70c25611c0)
 
 Configuring Switches and Trunking
 ---------------------------------
-Each multilayer switch has multiple VLANs configured to allow for inter-vlan routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow for the admin department to remotely access each managed switch for configuration and administrative purposes. I also added a Misc VLAN and changed the native vlan to an Unused vlan for security purposes.
+Each multilayer switch has multiple VLANs configured to allow for inter-vlan routing with the usage of SVI interfaces and trunk ports. SVI provides virtual interfaces that can be used for remote management and as a default gateway. Trunk ports are interfaces that allow switches to carry multiple types of VLAN data using 802.1q tagging. I also have a management VLAN to allow the admin department to remotely access each managed switch for configuration and administrative purposes. I also added a Misc VLAN and changed the native VLAN to an Unused vlan for security purposes.
 
 In this picture, I am remotely connecting to DSW1 for building A using Admin PC. I used a secure remote access protocol known as SSH and used the appropriate commands to generate an SSH key. I also added local login on the VTY lines, ACL, and only allowed SSH as communication. 
+
+Questions and Answers
+
 ![image](https://github.com/user-attachments/assets/34519d4b-57f5-40b7-939c-a85fa66b8c18)
 
 Configuring Etherchannel
@@ -79,10 +87,8 @@ Successful file transfer using FTP protocol
 FTP stands for file transfer protocol, a protocol used to transfer files from one device to another. It uses authentication methods such as username and password but has no encryption ability. I created a username and password for my device in the IT network to remotely connect to the FTP server and download the files it needs.
 ![image](https://github.com/user-attachments/assets/b3dd433f-a35a-40b3-813a-2b1aaf201a3c)
 
-
-Current Progress of my network, had to make many adjustments and changes. I got rid of the gym network to keep it more simple and changed the configuration of the server farm.
-
-![image](https://github.com/user-attachments/assets/461e6867-421e-4171-bf6f-02e80714ee57)
+Applying ACLs
+------------------------
 
 Applying ACLs to prevent unauthorized access to departments. In this image I applyed an ACL to the SVI on vlan 10 to prevent IT and HR from accessing each others networks. I used a more granular control to allow certain devices in IT department to access the HR department for management purposes. In the multilayer switch configuration I allowed he host 10.0.0.2 to access 10.0.1.192 network but denied the rest of the hosts in any other network. I applied the ACL inbound the VLAN 10 SVI.
 
@@ -98,6 +104,12 @@ Configuring DNS services
 In this image I successfully configured DNS services in my server farm and I used commands such as domain-lookup and nameserver to allow the routers and switches to contact the DNS server to provide the proper IP address to hostname mappings if they do not contain the neccessary information in there host files.
 ![image](https://github.com/user-attachments/assets/17969917-bb53-4b91-a4ec-2934d042bbd6)
 
+Current Progress
+---------------------
+
+Current Progress of my network, had to make many adjustments and changes. I got rid of the gym network to keep it more simple and changed the configuration of the server farm.
+
+![image](https://github.com/user-attachments/assets/461e6867-421e-4171-bf6f-02e80714ee57)
 
 
 

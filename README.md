@@ -2,7 +2,14 @@
 
 Introduction
 ---------------------------------
-In this project, I will be testing the knowledge I have learned from my CCNA studies using JeremysIT lab course on YouTube and Implementing it into a Campus Area Network Project. I first began by creating multiple departments such as HR, IT, and Security and using Variable Length Subnetting (VLSM) to divide my address space efficiently and still support each department's number of hosts. I also took into consideration for future expansion. I used VLSM instead of classful and FLSM subnetting is because VLSM allows flexibility when assigning IP addresses to our networks. It allows us to minimize address waste and assign just enough available addresses for the hosts on the network. I will be explaining as many concepts of networking as I can using my own knowledge.
+In this project, I will be testing the knowledge I have learned from my CCNA studies using JeremysIT lab course on YouTube and Implementing it into a Campus Area Network Project. I first began by creating multiple departments such as HR, IT, and Security and using Variable Length Subnetting (VLSM) to divide my address space efficiently and still support each department's number of hosts. I also took into consideration for future expansion. I used VLSM instead of classful and FLSM subnetting is because VLSM allows flexibility when assigning IP addresses to our networks. It allows us to minimize address waste and assign just enough available addresses for the hosts on the network. I will be explaining as many concepts of networking as I can using my own knowledge. I also implemented various services such as DHCP, DNS, FTP, SNMP, SSH, and more. I also used dynamic routing protocols such as OSPF and SVI's for management VLANs. HSRP for redundancy and ACLs for security. I will continue to update this project as I learn more about Cisco and Networking.
+
+**Current Progress**
+
+Note: I will keep updating this picture below as I progress and learn more about networking and the CCNA. This is my current progress with this project.
+
+![image](https://github.com/user-attachments/assets/5a424ef6-7094-46a9-8f95-503af833ea13)
+
 
 Goals for this lab
 ----------------------------
@@ -173,16 +180,35 @@ Types of EtherChannel
 
      - One end can't have less or more than the other end. The link numbers on both ends MUST MATCH
 
-  
-
-  
-
-
 ![image](https://github.com/user-attachments/assets/ed75a70f-826f-46d6-adba-163c47eea506)
 
 Configuring HSRP
 -------------------------------
-HSRP stands for hot standby routing protocol and allows for a virtual default gateway to be used which provide redundnacy on the network. I load balanced between each vlan by having my active and standby router different per vlan. I updated my DHCP pool for each VLAN as well to ensure all devices default gateway points to the virtual IP address.
+HSRP stands for hot standby routing protocol and allows for a virtual default gateway to be used which provide redundnacy on the network. It allows routers to work together and appear as a single virtual router from the perspective of the hosts on the network. If one router fails the hosts on the network will not lose connection since another router can take its place. I load balanced between each vlan by having my active and standby router different per vlan. I updated my DHCP pool for each VLAN as well to ensure all devices default gateway points to the virtual IP address.
+
+**Terminology for HSRP**
+
+   1. Virtual IP: Routers that run HSRP create a virtual IP address (VIP) that is shared between the routers. Both routers must be in the same HSRP group and the virtual IP address will be used as the default gateway for each host.
+      
+   2. Virtual MAC address: When a virtual IP address is created, a virtual MAC address is also generated. The active router will respond to all ARP requests sent in the network.
+      
+   3. Active & Standby: In HSRP the routers that are sharing the virtual IP address will have two roles, Active or Standby. The active router will be forwarding and recieving the actual data sent from the hosts in the network. It will also respond to ARP requests.
+      The standby router acts as the backup router and is waiting for the active router to fail to become the new router. The determination of active and backup router is determine by HSRP priority or the highest IP address if the prioritys are equal on both routers.
+
+   4. Hello msg: Router in the same HSRP group will send hello messages to ensure that both routers acknowledge eachothers presence. Hello messages are also used to notify if the active router is down. If the standby router stop recieving hello messages from the active 
+      router, the standby router will assume the active router has failed.
+
+**How HSRP works**
+
+   We now understand the terminology of HSRP so lets put this all together. First, the routers that are in the same HSRP group will use an election process to determine who is the active and standby router. Both routers will share a virtual IP and virtual MAC address.     From the perspective of the host machines on the local network believe that there is a single device acting as a default gateway. If the active router fails, the standby will take its place. The active router will forward all traffic and respond to all arp requests.
+
+   **HSRP States**
+
+   There are 6 steps in the HSRP process, initial, learn, listen, speak, standby, and active. Lets take a closer look at each of these steps.
+
+   1.
+
+
 
 ![image](https://github.com/user-attachments/assets/e0f94d88-d08b-4398-9b9b-cae1aae5eedf)
 

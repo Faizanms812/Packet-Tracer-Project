@@ -6,7 +6,15 @@ In this project, I will be testing the knowledge I have learned from my CCNA stu
 
 Goals for this lab
 ----------------------------
-
+Configure layer 2 segmentation using VLANs, Trunks, Access ports
+Configure layer 3 segmentation using VLSM
+Configure HSRP using SVI's
+Configuring management VLANs 
+Configuring ACLs
+Configuring SSH, FTP, NTP, DHCP, DNS
+Configuring OSPF 
+Configuring Etherchannel using PAGP
+Successfully allow all inter-vlan routing and letting all devices communicate to eachother 
 
 ![image](https://github.com/user-attachments/assets/cce3e3f9-3aa1-45ab-a0eb-06bf6df7fad0)
 
@@ -66,10 +74,33 @@ Successfully configured a dedicate syslog server to allow networking devices to 
 
 ![image](https://github.com/user-attachments/assets/8d6d6b32-4233-4fb5-9d4b-b2fbce318cb2)
 
-How Rapid Spanning Tree Protocol works
-------------------------------------
-In this diagram, there are 4 switches, some of the links are orange, whereas others are green. RSTP (Rapid Spanning Tree Protocol) has 3 different
-![image](https://github.com/user-attachments/assets/bf3b1889-60ba-4d36-a221-a05d15ce9ecc)
+Successful file transfer using FTP protocol
+----------------------------------------
+FTP stands for file transfer protocol, a protocol used to transfer files from one device to another. It uses authentication methods such as username and password but has no encryption ability. I created a username and password for my device in the IT network to remotely connect to the FTP server and download the files it needs.
+![image](https://github.com/user-attachments/assets/b3dd433f-a35a-40b3-813a-2b1aaf201a3c)
+
+
+Current Progress of my network, had to make many adjustments and changes. I got rid of the gym network to keep it more simple and changed the configuration of the server farm.
+
+![image](https://github.com/user-attachments/assets/461e6867-421e-4171-bf6f-02e80714ee57)
+
+Applying ACLs to prevent unauthorized access to departments. In this image I applyed an ACL to the SVI on vlan 10 to prevent IT and HR from accessing each others networks. I used a more granular control to allow certain devices in IT department to access the HR department for management purposes. In the multilayer switch configuration I allowed he host 10.0.0.2 to access 10.0.1.192 network but denied the rest of the hosts in any other network. I applied the ACL inbound the VLAN 10 SVI.
+
+![image](https://github.com/user-attachments/assets/7ac759f6-4087-4761-85d7-37e9c1d4a46b)
+
+Configuring host files on DSW1
+--------------------------------
+Host files are a file on a device that store IP address to hostname mapping. They were used before DNS servers and were very common during the 90's.
+![image](https://github.com/user-attachments/assets/0900ef2a-804d-4af8-922b-e45a14c2956b)
+
+Configuring DNS services
+---------------------------------
+In this image I successfully configured DNS services in my server farm and I used commands such as domain-lookup and nameserver to allow the routers and switches to contact the DNS server to provide the proper IP address to hostname mappings if they do not contain the neccessary information in there host files.
+![image](https://github.com/user-attachments/assets/17969917-bb53-4b91-a4ec-2934d042bbd6)
+
+
+
+
 
 
 

@@ -142,9 +142,9 @@ SVIs for DSW1 for building A
 
 SVIs for DSW2 for building B
 
-![image](https://github.com/user-attachments/assets/a4a1fada-b6ba-4905-b97c-ead0d9a60963)
-
 ![image](https://github.com/user-attachments/assets/0811340d-2b03-401e-8e22-ff3505090502)
+
+![image](https://github.com/user-attachments/assets/a4a1fada-b6ba-4905-b97c-ead0d9a60963)
 
 SVIs for DSW1 for building C
 
@@ -366,15 +366,17 @@ I configured OSPF (Open shorted path first), a dynamic routing protocol that is 
       
 ![Untitled](https://github.com/user-attachments/assets/ece9aafc-750d-4f8c-8775-22dea5cb9c8a)
 
-Current routing table (Note Building C is sill not configured)
+Current routing table for CoreR1 (Note Building C is sill not configured)
+
+![image](https://github.com/user-attachments/assets/b72e05f0-6ba7-46ff-8842-0529b345cce9)
 
 ![image](https://github.com/user-attachments/assets/fb16bdf7-180e-4b48-b4eb-1486943d8a87)
 
-OSPF database
+OSPF database for CoreR1
 
 ![image](https://github.com/user-attachments/assets/f2acbe29-5d31-43f8-ad9f-971f2e02eca9)
 
-OSPF neighbors
+OSPF neighbors for CoreR1
 
 ![image](https://github.com/user-attachments/assets/d719d932-a644-48af-b724-fab9d62e6ef3)
 
